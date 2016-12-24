@@ -1,4 +1,6 @@
 ## Execution plan
 
-- [ ] Function tree generation
+- [x] Function tree generation
 - [ ] Tree crossover implementation
+- [ ] Algorithm implementation
+- [ ] Visualization
