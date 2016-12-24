@@ -1,4 +1,12 @@
 {
-    "iterationCounts": 100,
-    "maxDepth": 10
+    "operations": [
+        "+",
+        "-",
+        "/",
+        "*"
+    ],
+    "depth": 3,
+    "amplitude": 10,
+    "iterations": 50,
+    "populationSize": 5
 }
