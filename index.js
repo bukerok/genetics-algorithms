@@ -1,5 +1,13 @@
+var config = require('./config.json');
+
+var i;
+
 // creating initial population
-// selection
-// selecting parents
-// crossover
-// mutation
+var population;
+
+for (i = 0; i < config.iterations; i++) {
+    // selection
+    // selecting parents
+    // crossover
+    // mutation
+}

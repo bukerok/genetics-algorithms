@@ -8,5 +8,5 @@
     "depth": 3,
     "amplitude": 10,
     "iterations": 50,
-    "populationSize": 5
+    "populationSize": 7
 }
