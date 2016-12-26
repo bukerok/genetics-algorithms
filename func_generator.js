@@ -8,6 +8,7 @@
         this.right = null;
         this.level = level;
         this.operation = operation;
+        this.parent = parent;
     };
 
     Node.prototype.getEvalString = function () {
@@ -38,7 +39,10 @@
         var queue = [];
         var result = [];
 
-        queue.push(first.root);
+        queue.push({
+            first: first.root,
+            second: second.root
+        });
         result.push({
             first: first.root,
             second: second.root
@@ -47,15 +51,24 @@
         while(queue.length) {
             element = queue.splice(0, 1)[0];
 
-            if (element.operation === 'x' || typeof element.left.operation === 'number') {
+            result.push(element);
+
+            if (element.first.operation === 'x' || typeof element.first.operation === 'number' ||
+                element.second.operation === 'x' || typeof element.second.operation === 'number') {
                 continue;
             }
 
-            //TODO add result forming of first and second field
-
-            queue.push(element.left);
-            queue.push(element.right);
+            queue.push({
+                first: element.first.left,
+                second: element.second.left
+            });
+            queue.push({
+                first: element.first.right,
+                second: element.second.right
+            });
         }
+
+        return result;
     };
 
     var Func = function () {
@@ -97,9 +110,22 @@
         var swappableNodes = getSwappableNodes(this, another);
         var node = swappableNodes[Math.floor(Math.random() * swappableNodes.length)];
 
-        tmp = node.first;
-        node.first = node.second;
-        node.second = tmp;
+        console.log('SW', node);
+
+        tmp = {
+            left: node.first.left,
+            right: node.first.right,
+            parent: node.first.parent,
+            operation: node.first.operation
+        };
+        node.first.parent = node.second.parent;
+        node.first.left = node.second.left;
+        node.first.right = node.second.right;
+        node.first.operation = node.second.operation;
+        node.second.parent = tmp.parent;
+        node.second.left = tmp.left;
+        node.second.right = tmp.right;
+        node.second.operation = tmp.operation;
     };
 
     /* jshint -W054*/
