@@ -5,8 +5,9 @@
         "/",
         "*"
     ],
-    "depth": 3,
+    "depth": 4,
     "amplitude": 10,
     "iterations": 50,
-    "populationSize": 8
+    "populationSize": 8,
+    "checkPoint": 10
 }

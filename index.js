@@ -121,14 +121,11 @@ for (i = 0; i < Math.floor(config.populationSize / 2); i++) {
     pairs.push(i);
 }
 
-
-for (i = 0; i < 10; i++) {//config.iterations; i++) {
-    parents = [];
-
+for (i = 0; i < config.iterations; i++) {
     //sorting
     population.sort(funcComparator);
 
-    if (i % 10 === 0) {
+    if (i % config.checkPoint === 0) {
         //print data about best function to file
         printResult(population[0]);
         //print data about worst function to file
@@ -143,7 +140,9 @@ for (i = 0; i < 10; i++) {//config.iterations; i++) {
     for (j = 0; j < pairs.length; j++) {
         population.push(parents[j].crossover(parents[pairs[j]]));
     }
-    console.log('POP SIZE', population.length);
+    for (j = 0; j < parents.length; j++) {
+        population.push(parents[j]);
+    }
     // mutation
 }
 

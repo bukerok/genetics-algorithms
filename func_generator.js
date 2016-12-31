@@ -20,6 +20,15 @@
             this.right.getEvalString() + ')';
     };
 
+    Node.prototype.clone = function () {
+        var clone = new Node(this.operation, this.level, this.parent);
+
+        clone.left = this.left ? this.left.clone() : null;
+        clone.right = this.right ? this.right.clone() : null;
+
+        return clone;
+    };
+
     var getConstValue = function () {
         return (Math.random() > 0.5 ? 1 : -1) * (Math.random() * config.amplitude);
     };
@@ -106,24 +115,25 @@
     };
 
     Func.prototype.crossover = function (another) {
-        var tmp;
-        var swappableNodes = getSwappableNodes(this, another);
+        var result = this.clone();
+        var swappableNodes = getSwappableNodes(result, another);
         var node = swappableNodes[Math.floor(Math.random() * swappableNodes.length)];
 
-        tmp = {
-            left: node.first.left,
-            right: node.first.right,
-            parent: node.first.parent,
-            operation: node.first.operation
-        };
-        node.first.parent = node.second.parent;
-        node.first.left = node.second.left;
-        node.first.right = node.second.right;
+        node.first.parent = node.second.parent ? node.second.parent.clone() : null;
+        node.first.left = node.second.left ? node.second.left.clone() : null;
+        node.first.right = node.second.right ? node.second.right.clone() : null;
         node.first.operation = node.second.operation;
-        node.second.parent = tmp.parent;
-        node.second.left = tmp.left;
-        node.second.right = tmp.right;
-        node.second.operation = tmp.operation;
+
+        return result;
+    };
+
+    Func.prototype.clone = function () {
+        // very inefficient
+        var result = new Func();
+
+        result.root = this.root.clone();
+
+        return result;
     };
 
     /* jshint -W054*/

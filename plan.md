@@ -2,6 +2,12 @@
 
 - [x] Function tree generation
 - [x] Tree crossover implementation
-- [ ] Algorithm implementation
+- [x] Algorithm implementation
+- [ ] Mutation implementation
 - [ ] Visualization
 - [ ] Update crossover mechanism
+- [ ] Refactor code
+
+### Current lacks
+
+* No processing for incontinuous finiteFunctions
