@@ -110,8 +110,6 @@
         var swappableNodes = getSwappableNodes(this, another);
         var node = swappableNodes[Math.floor(Math.random() * swappableNodes.length)];
 
-        console.log('SW', node);
-
         tmp = {
             left: node.first.left,
             right: node.first.right,

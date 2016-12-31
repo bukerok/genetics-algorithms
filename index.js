@@ -50,7 +50,7 @@ var getFuncMetric = function (func) {
 var getSelection = function (arr) {
     var j, k;
     var funcMetric;
-    var randInd, indSum;
+    var randInd;
     var sumNorm = 0;
     var finiteFunctions = [];
     var selection = [];
@@ -70,24 +70,28 @@ var getSelection = function (arr) {
         });
     }
 
-    for (j = 0; j < finiteFunctions.length; j++) {
-        finiteFunctions[j].norm = finiteFunctions[j].norm / sumNorm;
+    // normalizing selection probability
+    finiteFunctions[0].norm = (sumNorm - finiteFunctions[0].norm) /
+        (sumNorm * (finiteFunctions.length - 1));
+    for (j = 1; j < finiteFunctions.length; j++) {
+        finiteFunctions[j].norm = (sumNorm - finiteFunctions[j].norm) /
+            (sumNorm * (finiteFunctions.length - 1)) + finiteFunctions[j - 1].norm;
     }
 
-    for (j = 0; j < Math.floor(config.populationSize / 2); j++) {
+    while (selection.length < Math.floor(config.populationSize / 2)) {
         randInd = Math.random();
-        indSum = 0;
 
         for (k = 0; k < finiteFunctions.length; k++) {
-            if (randInd < finiteFunctions[k].norm) {
-                // console.log('SELECT', k);
+            if (randInd < finiteFunctions[k].norm && selection.indexOf(finiteFunctions[k]) === -1) {
+                selection.push(finiteFunctions[k]);
                 break;
             }
-            indSum += finiteFunctions[k].norm;
         }
     }
 
-    return selection;
+    return selection.map(function (el) {
+        return el.func;
+    });
 };
 
 var shuffle = function (array) {
@@ -139,9 +143,10 @@ for (i = 0; i < 10; i++) {//config.iterations; i++) {
     for (j = 0; j < pairs.length; j++) {
         population.push(parents[j].crossover(parents[pairs[j]]));
     }
+    console.log('POP SIZE', population.length);
     // mutation
 }
 
 population.sort(funcComparator);
 printResult(population[0]);
-printResult(population[population.length - 1])
+printResult(population[population.length - 1]);

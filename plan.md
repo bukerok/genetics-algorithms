@@ -4,3 +4,4 @@
 - [x] Tree crossover implementation
 - [ ] Algorithm implementation
 - [ ] Visualization
+- [ ] Update crossover mechanism
