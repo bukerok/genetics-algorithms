@@ -7,7 +7,8 @@
     ],
     "depth": 4,
     "amplitude": 10,
-    "iterations": 50,
+    "iterations": 20,
     "populationSize": 8,
-    "checkPoint": 10
+    "checkPoint": 10,
+    "mutationThreshold": 0.05
 }

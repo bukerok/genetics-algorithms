@@ -1,6 +1,6 @@
 var config = require('./config.json');
-var data = require('./data.json');
-var Func = require('./func_generator').Func;
+var data = require('./data/data.json');
+var Func = require('./src/func');
 
 var i, j;
 var population = [];
@@ -20,14 +20,8 @@ var printResult = function (f) {
 };
 
 var funcComparator = function (a, b) {
-    var j;
-    var diffA = 0;
-    var diffB = 0;
-
-    for (j = 0; j < data.length; j++) {
-        diffA += Math.abs(a.evaluate(data[j].arg) - data[j].val);
-        diffB += Math.abs(b.evaluate(data[j].arg) - data[j].val);
-    }
+    var diffA = getFuncMetric(a);
+    var diffB = getFuncMetric(b);
 
     if (!Number.isFinite(diffA - diffB)) {
         return !Number.isFinite(diffA) ? 1 : -1;
@@ -48,7 +42,7 @@ var getFuncMetric = function (func) {
 };
 
 var getSelection = function (arr) {
-    var j, k;
+    var j, tmp;
     var funcMetric;
     var randInd;
     var sumNorm = 0;
@@ -71,11 +65,19 @@ var getSelection = function (arr) {
     }
 
     // normalizing selection probability
-    finiteFunctions[0].norm = (sumNorm - finiteFunctions[0].norm) /
-        (sumNorm * (finiteFunctions.length - 1));
+    // calculating functions deviations
+    for (j = 0; j < finiteFunctions.length; j++) {
+        finiteFunctions[j].norm = finiteFunctions[j].norm / sumNorm;
+    }
+    // swap deviations
+    for (j = 0; j < Math.floor(finiteFunctions.length / 2); j++) {
+        tmp = finiteFunctions[j].norm;
+        finiteFunctions[j].norm = finiteFunctions[finiteFunctions.length - j - 1].norm;
+        finiteFunctions[finiteFunctions.length - j - 1].norm = tmp;
+    }
+    // format resulting sequence
     for (j = 1; j < finiteFunctions.length; j++) {
-        finiteFunctions[j].norm = (sumNorm - finiteFunctions[j].norm) /
-            (sumNorm * (finiteFunctions.length - 1)) + finiteFunctions[j - 1].norm;
+        finiteFunctions[j].norm += finiteFunctions[j - 1].norm;
     }
 
     while (selection.length < Math.floor(config.populationSize / 2)) {
@@ -112,6 +114,28 @@ var shuffle = function (array) {
     return array;
 };
 
+var isAcceptableShuffle = function (sh) {
+    var i;
+
+    for (i = 0; i < sh.length; i++) {
+        if (sh[i] === i) {
+            return false;
+        }
+    }
+
+    return true;
+};
+
+var getShuffle = function (pairs) {
+    var sh = shuffle(pairs);
+
+    while (!isAcceptableShuffle(sh)) {
+        sh = shuffle(pairs);
+    }
+
+    return sh;
+};
+
 // creating initial population
 for (i = 0; i < config.populationSize; i++) {
     population.push(new Func());
@@ -134,7 +158,7 @@ for (i = 0; i < config.iterations; i++) {
     // selection
     parents = getSelection(population);
     // parents pairs formation
-    pairs = shuffle(pairs);
+    pairs = getShuffle(pairs);
     // crossover
     population = [];
     for (j = 0; j < pairs.length; j++) {
@@ -144,6 +168,9 @@ for (i = 0; i < config.iterations; i++) {
         population.push(parents[j]);
     }
     // mutation
+    for (j = 0; j < population.length; j++) {
+        population[j].mutate();
+    }
 }
 
 population.sort(funcComparator);
