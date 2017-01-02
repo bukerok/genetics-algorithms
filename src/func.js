@@ -119,7 +119,33 @@ class Func {
     }
 
     mutate() {
-        //TODO
+        var rand;
+        var element;
+        var queue = [];
+
+        queue.push(this.root);
+
+        while(queue.length) {
+            element = queue.splice(0, 1)[0];
+            rand = Math.random();
+
+            if(element.left) {
+                queue.push(element.left);
+            }
+            if(element.right) {
+                queue.push(element.right);
+            }
+
+            if (rand > config.mutationThreshold) {
+                continue;
+            }
+
+            if (config.operations.indexOf(element.operation) === -1) {
+                element.operation = getRandomOperation(['x', 'const']);
+            } else {
+                element.operation = getRandomOperation(config.operations);
+            }
+        }
     }
 }
 /* jshint +W104 */

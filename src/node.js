@@ -1,5 +1,3 @@
-var config = require('../config.json');
-
 /* jshint -W104 */
 class Node {
     constructor(operation, level, parent) {
@@ -26,10 +24,6 @@ class Node {
         clone.right = this.right ? this.right.clone() : null;
 
         return clone;
-    }
-
-    mutate() {
-        console.log('NODE MUTATION');
     }
 }
 /* jshint +W104 */

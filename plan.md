@@ -4,7 +4,7 @@
 - [x] Tree crossover implementation
 - [x] Algorithm implementation
 - [x] Refactor code
-- [ ] Mutation implementation
+- [x] Mutation implementation
 - [ ] Visualization
 - [ ] Update crossover mechanism
 - [ ] Write tests for core functionality
@@ -12,4 +12,4 @@
 
 ### Current lacks
 
-* No processing for incontinuous finiteFunctions
+* No processing for incontinuous functions
