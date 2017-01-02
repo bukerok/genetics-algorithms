@@ -1,4 +1,5 @@
-var config = require('./config.json');
+var algorithmConfig = require('./configs/algorithm-config.json');
+var debugConfig = require('./configs/debug-config.json');
 var data = require('./data/data.json');
 var Func = require('./src/func');
 var print = require('./src/helpers/data_printer').printPopulationInfo;
@@ -69,7 +70,7 @@ var getSelection = function (arr) {
         finiteFunctions[j].norm += finiteFunctions[j - 1].norm;
     }
 
-    while (selection.length < Math.floor(config.populationSize / 2)) {
+    while (selection.length < Math.floor(algorithmConfig.populationSize / 2)) {
         randInd = Math.random();
 
         for (k = 0; k < finiteFunctions.length; k++) {
@@ -126,20 +127,20 @@ var getShuffle = function (pairs) {
 };
 
 // creating initial population
-for (i = 0; i < config.populationSize; i++) {
+for (i = 0; i < algorithmConfig.populationSize; i++) {
     population.push(new Func());
 }
 
-for (i = 0; i < Math.floor(config.populationSize / 2); i++) {
+for (i = 0; i < Math.floor(algorithmConfig.populationSize / 2); i++) {
     pairs.push(i);
 }
 
-for (i = 0; i < config.iterations; i++) {
+for (i = 0; i < algorithmConfig.iterations; i++) {
     //sorting
     population.sort(funcComparator);
 
-    if (i % config.checkPoint === 0) {
-        print(population, i / config.checkPoint);
+    if (i % debugConfig.checkPoint === 0) {
+        print(population, i / debugConfig.checkPoint);
     }
     // selection
     parents = getSelection(population);

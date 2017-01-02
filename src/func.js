@@ -1,4 +1,4 @@
-var config = require('../config.json');
+var config = require('../configs/algorithm-config.json');
 var Node = require('./node');
 
 var getConstValue = function () {

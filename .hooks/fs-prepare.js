@@ -1,7 +1,8 @@
 (function () {
     var fs = require('fs');
     var path = require('path');
-    var dataPath = path.join(process.cwd(), 'logs');
+    var config = require('../configs/debug-config.json');
+    var dataPath = path.join(process.cwd(), config.logsFolder);
 
     var i;
     var files;
