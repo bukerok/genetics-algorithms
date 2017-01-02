@@ -22,8 +22,14 @@ exports.printPopulationInfo = function (population, mark) {
     }
 
     result = {
-        best: bestResult,
-        worst: worstResult
+        best: {
+            expression: best.root.getEvalString(),
+            data: bestResult
+        },
+        worst: {
+            expression: worst.root.getEvalString(),
+            data: worstResult
+        }
     };
 
     fs.writeFile(path.join(process.cwd(), 'logs', 'data-' + mark + '.json'),
