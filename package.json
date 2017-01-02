@@ -4,7 +4,8 @@
   "description": "Genetic algorith for approximation function of one variable.",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec test/simple.js"
+    "test": "./node_modules/.bin/mocha --reporter spec test/simple.js",
+    "start": "node ./.hooks/fs-prepare.js && node index.js"
   },
   "author": "",
   "license": "ISC",

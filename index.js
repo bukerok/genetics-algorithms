@@ -1,23 +1,12 @@
 var config = require('./config.json');
 var data = require('./data/data.json');
 var Func = require('./src/func');
+var print = require('./src/helpers/data_printer').printPopulationInfo;
 
 var i, j;
 var population = [];
 var parents = [];
 var pairs = [];
-
-var printResult = function (f) {
-    //TODO output values to the file
-    var j;
-    var diff = 0;
-
-    for (j = 0; j < data.length; j++) {
-        diff += Math.abs(f.evaluate(data[j].arg) - data[j].val);
-    }
-
-    console.log('DIFF', diff);
-};
 
 var funcComparator = function (a, b) {
     var diffA = getFuncMetric(a);
@@ -150,10 +139,7 @@ for (i = 0; i < config.iterations; i++) {
     population.sort(funcComparator);
 
     if (i % config.checkPoint === 0) {
-        //print data about best function to file
-        printResult(population[0]);
-        //print data about worst function to file
-        printResult(population[population.length - 1]);
+        print(population, i / config.checkPoint);
     }
     // selection
     parents = getSelection(population);
@@ -174,5 +160,4 @@ for (i = 0; i < config.iterations; i++) {
 }
 
 population.sort(funcComparator);
-printResult(population[0]);
-printResult(population[population.length - 1]);
+print(population, 'final');

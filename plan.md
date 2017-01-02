@@ -5,7 +5,7 @@
 - [x] Algorithm implementation
 - [x] Refactor code
 - [x] Mutation implementation
-- [ ] Visualization
+- [x] Add data printing to the file for visualization
 - [ ] Update crossover mechanism
 - [ ] Write tests for core functionality
 - [ ] Refactor code
