@@ -32,11 +32,11 @@ exports.printPopulationInfo = function (population, mark) {
         }
     };
 
-    fs.writeFile(path.join(process.cwd(), 'logs', 'data-' + mark + '.json'),
-        JSON.stringify(result, null, '\t'), function (error) {
-            if (error) {
-                console.error('Error: unable to write results to file.', error.message);
-                console.error('Error: visualisation data damaged.');
-            }
-        });
+    try {
+        fs.writeFileSync(path.join(process.cwd(), 'logs', 'data-' + mark + '.json'),
+            JSON.stringify(result, null, '\t'));
+    } catch (error) {
+        console.error('Error: unable to write results to file.', error.message);
+        console.error('Error: visualisation data damaged.');
+    }
 };
