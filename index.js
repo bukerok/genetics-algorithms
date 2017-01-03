@@ -1,164 +1,165 @@
-var algorithmConfig = require('./configs/algorithm-config.json');
-var debugConfig = require('./configs/debug-config.json');
-var data = require('./data/data.json');
-var Func = require('./src/func');
-var print = require('./src/helpers/data_printer').printPopulationInfo;
+module.exports = function () {
+    var algorithmConfig = require('./configs/algorithm-config.json');
+    var debugConfig = require('./configs/debug-config.json');
+    var data = require('./data/data.json');
+    var Func = require('./src/func');
+    var print = require('./src/helpers/data_printer').printPopulationInfo;
 
-var i, j;
-var population = [];
-var parents = [];
-var pairs = [];
+    var i, j;
+    var population = [];
+    var parents = [];
+    var pairs = [];
 
-var funcComparator = function (a, b) {
-    var diffA = getFuncMetric(a);
-    var diffB = getFuncMetric(b);
+    var funcComparator = function (a, b) {
+        var diffA = getFuncMetric(a);
+        var diffB = getFuncMetric(b);
 
-    if (!Number.isFinite(diffA - diffB)) {
-        return !Number.isFinite(diffA) ? 1 : -1;
-    } else {
-        return diffA - diffB;
-    }
-};
+        if (!Number.isFinite(diffA - diffB)) {
+            return !Number.isFinite(diffA) ? 1 : -1;
+        } else {
+            return diffA - diffB;
+        }
+    };
 
-var getFuncMetric = function (func) {
-    var j;
-    var metr = 0;
+    var getFuncMetric = function (func) {
+        var j;
+        var metr = 0;
 
-    for (j = 0; j < data.length; j++) {
-        metr += Math.abs(func.evaluate(data[j].arg) - data[j].val);
-    }
-
-    return metr;
-};
-
-var getSelection = function (arr) {
-    var j, tmp;
-    var funcMetric;
-    var randInd;
-    var sumNorm = 0;
-    var finiteFunctions = [];
-    var selection = [];
-
-    for (j = 0; j < arr.length; j++) {
-        funcMetric = getFuncMetric(arr[j]);
-
-        if (!Number.isFinite(funcMetric)) {
-            console.error('UNEXPECTED BEHAVIOR: PROVIDED FUNCTION DISCONTINUOUS.');
-            process.exit(1);
+        for (j = 0; j < data.length; j++) {
+            metr += Math.abs(func.evaluate(data[j].arg) - data[j].val);
         }
 
-        sumNorm += funcMetric;
-        finiteFunctions.push({
-            func: arr[j],
-            norm: funcMetric
-        });
-    }
+        return metr;
+    };
 
-    // normalizing selection probability
-    // calculating functions deviations
-    for (j = 0; j < finiteFunctions.length; j++) {
-        finiteFunctions[j].norm = finiteFunctions[j].norm / sumNorm;
-    }
-    // swap deviations
-    for (j = 0; j < Math.floor(finiteFunctions.length / 2); j++) {
-        tmp = finiteFunctions[j].norm;
-        finiteFunctions[j].norm = finiteFunctions[finiteFunctions.length - j - 1].norm;
-        finiteFunctions[finiteFunctions.length - j - 1].norm = tmp;
-    }
-    // format resulting sequence
-    for (j = 1; j < finiteFunctions.length; j++) {
-        finiteFunctions[j].norm += finiteFunctions[j - 1].norm;
-    }
+    var getSelection = function (arr) {
+        var j, tmp;
+        var funcMetric;
+        var randInd;
+        var sumNorm = 0;
+        var finiteFunctions = [];
+        var selection = [];
 
-    while (selection.length < Math.floor(algorithmConfig.populationSize / 2)) {
-        randInd = Math.random();
+        for (j = 0; j < arr.length; j++) {
+            funcMetric = getFuncMetric(arr[j]);
 
-        for (k = 0; k < finiteFunctions.length; k++) {
-            if (randInd < finiteFunctions[k].norm && selection.indexOf(finiteFunctions[k]) === -1) {
-                selection.push(finiteFunctions[k]);
-                break;
+            if (!Number.isFinite(funcMetric)) {
+                throw new Error('Unexpected behavior: discontinuous function.');
+            }
+
+            sumNorm += funcMetric;
+            finiteFunctions.push({
+                func: arr[j],
+                norm: funcMetric
+            });
+        }
+
+        // normalizing selection probability
+        // calculating functions deviations
+        for (j = 0; j < finiteFunctions.length; j++) {
+            finiteFunctions[j].norm = finiteFunctions[j].norm / sumNorm;
+        }
+        // swap deviations
+        for (j = 0; j < Math.floor(finiteFunctions.length / 2); j++) {
+            tmp = finiteFunctions[j].norm;
+            finiteFunctions[j].norm = finiteFunctions[finiteFunctions.length - j - 1].norm;
+            finiteFunctions[finiteFunctions.length - j - 1].norm = tmp;
+        }
+        // format resulting sequence
+        for (j = 1; j < finiteFunctions.length; j++) {
+            finiteFunctions[j].norm += finiteFunctions[j - 1].norm;
+        }
+
+        while (selection.length < Math.floor(algorithmConfig.populationSize / 2)) {
+            randInd = Math.random();
+
+            for (k = 0; k < finiteFunctions.length; k++) {
+                if (randInd < finiteFunctions[k].norm && selection.indexOf(finiteFunctions[k]) === -1) {
+                    selection.push(finiteFunctions[k]);
+                    break;
+                }
             }
         }
+
+        return selection.map(function (el) {
+            return el.func;
+        });
+    };
+
+    var shuffle = function (array) {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        return array;
+    };
+
+    var isAcceptableShuffle = function (sh) {
+        var i;
+
+        for (i = 0; i < sh.length; i++) {
+            if (sh[i] === i) {
+                return false;
+            }
+        }
+
+        return true;
+    };
+
+    var getShuffle = function (pairs) {
+        var sh = shuffle(pairs);
+
+        while (!isAcceptableShuffle(sh)) {
+            sh = shuffle(pairs);
+        }
+
+        return sh;
+    };
+
+    // creating initial population
+    for (i = 0; i < algorithmConfig.populationSize; i++) {
+        population.push(new Func());
     }
 
-    return selection.map(function (el) {
-        return el.func;
-    });
-};
-
-var shuffle = function (array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
-
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-        // Pick a remaining element...
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-
-        // And swap it with the current element.
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
+    for (i = 0; i < Math.floor(algorithmConfig.populationSize / 2); i++) {
+        pairs.push(i);
     }
 
-    return array;
-};
+    for (i = 0; i < algorithmConfig.iterations; i++) {
+        //sorting
+        population.sort(funcComparator);
 
-var isAcceptableShuffle = function (sh) {
-    var i;
-
-    for (i = 0; i < sh.length; i++) {
-        if (sh[i] === i) {
-            return false;
+        if (i % debugConfig.checkPoint === 0) {
+            print(population, i / debugConfig.checkPoint);
+        }
+        // selection
+        parents = getSelection(population);
+        // parents pairs formation
+        pairs = getShuffle(pairs);
+        // crossover
+        population = [];
+        for (j = 0; j < pairs.length; j++) {
+            population.push(parents[j].crossover(parents[pairs[j]]));
+        }
+        for (j = 0; j < parents.length; j++) {
+            population.push(parents[j]);
+        }
+        // mutation
+        for (j = 0; j < population.length; j++) {
+            population[j].mutate();
         }
     }
 
-    return true;
-};
-
-var getShuffle = function (pairs) {
-    var sh = shuffle(pairs);
-
-    while (!isAcceptableShuffle(sh)) {
-        sh = shuffle(pairs);
-    }
-
-    return sh;
-};
-
-// creating initial population
-for (i = 0; i < algorithmConfig.populationSize; i++) {
-    population.push(new Func());
-}
-
-for (i = 0; i < Math.floor(algorithmConfig.populationSize / 2); i++) {
-    pairs.push(i);
-}
-
-for (i = 0; i < algorithmConfig.iterations; i++) {
-    //sorting
     population.sort(funcComparator);
-
-    if (i % debugConfig.checkPoint === 0) {
-        print(population, i / debugConfig.checkPoint);
-    }
-    // selection
-    parents = getSelection(population);
-    // parents pairs formation
-    pairs = getShuffle(pairs);
-    // crossover
-    population = [];
-    for (j = 0; j < pairs.length; j++) {
-        population.push(parents[j].crossover(parents[pairs[j]]));
-    }
-    for (j = 0; j < parents.length; j++) {
-        population.push(parents[j]);
-    }
-    // mutation
-    for (j = 0; j < population.length; j++) {
-        population[j].mutate();
-    }
-}
-
-population.sort(funcComparator);
-print(population, 'final');
+    print(population, 'final');
+};

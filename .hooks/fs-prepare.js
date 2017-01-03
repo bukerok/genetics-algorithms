@@ -1,4 +1,4 @@
-(function () {
+module.exports = function () {
     var fs = require('fs');
     var path = require('path');
     var config = require('../configs/debug-config.json');
@@ -17,6 +17,8 @@
 
     files = fs.readdirSync(dataPath);
     for (i = 0; i < files.length; i++) {
-        fs.unlinkSync(path.join(dataPath, files[i]));
+        try {
+            fs.unlinkSync(path.join(dataPath, files[i]));
+        } catch (_) {}
     }
-})();
+};

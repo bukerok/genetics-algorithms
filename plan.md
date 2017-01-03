@@ -9,6 +9,7 @@
 - [ ] Update crossover mechanism
 - [ ] Write tests for core functionality
 - [ ] Refactor code
+- [ ] Resolve issue with EPERM for data writing
 
 ### Current lacks
 
