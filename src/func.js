@@ -24,10 +24,6 @@ var getSwappableNodes = function (first, second) {
         first: first.root,
         second: second.root
     });
-    result.push({
-        first: first.root,
-        second: second.root
-    });
 
     while(queue.length) {
         element = queue.splice(0, 1)[0];
@@ -98,16 +94,27 @@ class Func {
     }
 
     crossover(another) {
-        var result = this.clone();
-        var swappableNodes = getSwappableNodes(result, another);
+        var tmp;
+        var mutant1 = this.clone();
+        var mutant2 = another.clone();
+        var swappableNodes = getSwappableNodes(mutant1, mutant2);
         var node = swappableNodes[Math.floor(Math.random() * swappableNodes.length)];
 
+        tmp = node.first.clone();
         node.first.parent = node.second.parent ? node.second.parent.clone() : null;
         node.first.left = node.second.left ? node.second.left.clone() : null;
         node.first.right = node.second.right ? node.second.right.clone() : null;
         node.first.operation = node.second.operation;
+        node.second.parent = tmp.parent ? tmp.parent.clone() : null;
+        node.second.left = tmp.left ? tmp.left.clone() : null;
+        node.second.right = tmp.right ? tmp.right.clone() : null;
+        node.second.operation = tmp.operation;
 
-        return result;
+
+        return [
+            mutant1,
+            mutant2
+        ];
     }
 
     evaluate(x) {

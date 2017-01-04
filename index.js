@@ -110,10 +110,7 @@ module.exports = function () {
         // crossover
         population = [];
         for (j = 0; j < pairs.length; j++) {
-            population.push(parents[j].crossover(parents[pairs[j]]));
-        }
-        for (j = 0; j < parents.length; j++) {
-            population.push(parents[j]);
+            population = population.concat(parents[j].crossover(parents[pairs[j]]));
         }
         // mutation
         for (j = 0; j < population.length; j++) {
