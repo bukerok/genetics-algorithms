@@ -1,4 +1,4 @@
-ready = () => {
+var ready = function() {
     //let data = require('./data/data');
     var series = [new Series('Series 1', [null, null, null, null, null, 6, 11, 32, 110, 235, 369, 640,
         1005, 1436, 2063, 3057, 4618, 6444, 9822, 15468, 20434, 24126,

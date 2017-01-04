@@ -6,7 +6,7 @@ var Chart = function (title, subtitle, xAxisTitle, yAxisTitle, series) {
     this.series = series;
 };
 Chart.prototype.getChart = function () {
-    let realSolutionChart = Highcharts.chart('real-solution-container', {
+    var realSolutionChart = Highcharts.chart('real-solution-container', {
         chart: {
             type: 'area'
         },
