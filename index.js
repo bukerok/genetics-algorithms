@@ -1,7 +1,7 @@
 module.exports = function () {
     var algorithmConfig = require('./configs/algorithm-config.json');
     var debugConfig = require('./configs/debug-config.json');
-    var data = require('./data/data.json');
+    var data = require('./data/data.json').best.data;
     var Func = require('./src/func');
     var getShuffle = require('./src/helpers/shuffler').getShuffle;
     var print = require('./src/helpers/data_printer').printPopulationInfo;
