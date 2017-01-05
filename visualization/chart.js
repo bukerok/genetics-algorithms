@@ -1,26 +1,23 @@
-var Chart = function (title, subtitle, xAxisTitle, yAxisTitle, series) {
+var Chart = function (container, title, series) {
+    this.container = container;
     this.title = title;
-    this.subtitle = subtitle;
-    this.xAxisTitle = xAxisTitle;
-    this.yAxisTitle = yAxisTitle;
     this.series = series;
 };
-Chart.prototype.getChart = function () {
-    let realSolutionChart = Highcharts.chart('real-solution-container', {
+
+Chart.prototype.build = function () {
+    var realSolutionChart = Highcharts.chart(this.container, {
         chart: {
-            type: 'area'
+            type: 'line',
+            zoomType: 'y'
         },
         title: {
             text: this.title
         },
-        subtitle: {
-            text: this.subtitle
+        legend: {
+            align: 'left'
         },
         xAxis: {
             allowDecimals: false,
-            title: {
-                text: this.xAxisTitle
-            },
             labels: {
                 formatter: function () {
                     return this.value; // clean, unformatted number for year
@@ -28,9 +25,6 @@ Chart.prototype.getChart = function () {
             }
         },
         yAxis: {
-            title: {
-                text: this.yAxisTitle
-            },
             labels: {
                 formatter: function () {
                     return this.value;
