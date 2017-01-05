@@ -1,27 +1,25 @@
-var ready = function () {
-    var request = new XMLHttpRequest();
+document.addEventListener("DOMContentLoaded", () => {
+    let request = new XMLHttpRequest();
     request.open("GET", "/data", true);
-    request.onload = function () {
-        var data = JSON.parse(request.responseText);
-
-        var seriesTemp = [
-            new Series(data[0].best.expression, data[0].best.data),
-            new Series(data[0].worst.expression, data[0].worst.data),
-            new Series(data[1].best.expression, data[1].best.data),
-            new Series(data[1].worst.expression, data[1].worst.data)
+    request.onload = () => {
+        let data = JSON.parse(request.responseText);
+        let [target, final, ...iterations] = data.reverse();
+        let seriesIterations = [];
+        for (let i = 0; i < iterations.length; i++) {
+            let currentItem = iterations[i];
+            seriesIterations.push(new Series(currentItem.best.expression, currentItem.best.data));
+            seriesIterations.push(new Series(currentItem.worst.expression, currentItem.worst.data));
+        }
+        let seriesFinal = [
+            new Series(final.best.expression, final.best.data),
+            new Series(final.worst.expression, final.worst.data)
         ];
 
-        var seriesFinal = [
-            new Series(data[2].best.expression, data[2].best.data),
-            new Series(data[2].worst.expression, data[2].worst.data)
-        ];
+        let seriesTarget = [new Series(target.best.expression, target.best.data)];
 
-        var chart = new Chart('temp-solution-container', 'Text 1', seriesTemp);
-        var chartFinal = new Chart('final-solution-container', 'Text 1', seriesFinal);
-        chart.build();
-        chartFinal.build();
+        new Chart('iterations-solution-container', 'Итерации', seriesIterations).build();
+        new Chart('final-solution-container', 'Итоговая', seriesFinal).build();
+        new Chart('target-solution-container', 'Целевая', seriesTarget).build();
     };
     request.send();
-}
-
-document.addEventListener("DOMContentLoaded", ready);
+});

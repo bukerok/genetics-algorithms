@@ -3,6 +3,7 @@ var Chart = function (container, title, series) {
     this.title = title;
     this.series = series;
 };
+
 Chart.prototype.build = function () {
     var realSolutionChart = Highcharts.chart(this.container, {
         chart: {
