@@ -14,7 +14,6 @@
     "sinon": "^1.17.7",
     "connect": "^3.5.0",
     "highcharts": "^5.0.6",
-    "serve-static": "^1.11.1",
-    "jquery": "^3.1.1"
+    "serve-static": "^1.11.1"
   }
 }
