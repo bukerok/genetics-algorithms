@@ -1,6 +1,6 @@
 var fs = require('fs');
 var path = require('path');
-var data = require('../../data/data.json');
+var data = require('../../data/data.json').best.data;
 
 exports.printPopulationInfo = function (population, mark) {
     var i;
