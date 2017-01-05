@@ -12,12 +12,12 @@ exports.printPopulationInfo = function (population, mark) {
 
     for (i = 0; i < data.length; i++) {
         bestResult.push({
-            x: data[i].arg,
-            y: best.evaluate(data[i].arg)
+            x: data[i].x,
+            y: best.evaluate(data[i].x)
         });
         worstResult.push({
-            x: data[i].arg,
-            y: worst.evaluate(data[i].arg)
+            x: data[i].x,
+            y: worst.evaluate(data[i].x)
         });
     }
 

@@ -27,7 +27,7 @@ module.exports = function () {
         var metr = 0;
 
         for (j = 0; j < data.length; j++) {
-            metr += Math.abs(func.evaluate(data[j].arg) - data[j].val);
+            metr += Math.abs(func.evaluate(data[j].x) - data[j].y);
         }
 
         return metr;
