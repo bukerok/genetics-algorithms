@@ -14,7 +14,8 @@ Chart.prototype.build = function () {
             text: this.title
         },
         legend: {
-            align: 'left'
+            floating: false,
+            layout: 'vertical'
         },
         xAxis: {
             allowDecimals: false,
@@ -32,7 +33,7 @@ Chart.prototype.build = function () {
             }
         },
         tooltip: {
-            pointFormat: '{series.name} <b>{point.y:,.0f}</b><br/> {point.x}'
+            pointFormat: '<b>{point.y:,.3f}</b>'
         },
         plotOptions: {
             area: {
